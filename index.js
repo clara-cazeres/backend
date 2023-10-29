@@ -20,7 +20,7 @@ app.listen(port, () =>{
 
 
 app.get("/users/login", async(req, res) => {
-    console.log()
+
     Users.findOne({username: req.query.username})
     .then((user)=>{
         if (!user){
@@ -33,7 +33,7 @@ app.get("/users/login", async(req, res) => {
         }
     }
     })
-    .catch((error) => {
+    .catch((err) => {
         res.status(500).send("Internal server error")
     })
 });
