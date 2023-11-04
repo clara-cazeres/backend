@@ -1,3 +1,4 @@
+//importacion de librerias
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./utils/db.js";
@@ -10,9 +11,18 @@ connectDB();
 
 const port = process.env.PORT;
 
+//importacion de endpoints
+import { getDiscografia } from "./controllers/discografiaController.js";
+
+//definicion de endpoints
+
 app.get("/", (req, res) => {
     res.send("Hello World");
 });
+
+app.get('/discografia', getDiscografia);
+
+
 
 app.listen(port, () =>{
     console.log(`App corriendo en puerto ${port}`)
