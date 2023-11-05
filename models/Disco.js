@@ -4,11 +4,10 @@ import mongooseUniqueValidator from "mongoose-unique-validator";
 let Schema = mongoose.Schema;
 
 let discoSchema = new Schema({
-    name: {type: String, required: true},
-    lanzamiento: {type: Number},
+    nombre: {type: String},
+    fecha: {type: String},
     tipo: {type: String},
-    canciones: {type: []},
-    portada: {type: String},
+    portada :{type: String},
 })
 
 discoSchema.plugin(mongooseUniqueValidator);

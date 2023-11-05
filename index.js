@@ -3,16 +3,25 @@ import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./utils/db.js";
 import Users from "./models/User.js";
+import bodyParser from "body-parser";
+import cors from "cors";
+
+
+import { mostrarDatosRequest } from './utils/datosRequest.js';
+import { manejarErrores } from './utils/manejadorErrores.js';
 
 const app = express();
 app.use(express.json());
 dotenv.config();
 connectDB();
+app.use(bodyParser.json())
+app.use(express.urlencoded({extended: true}));
+app.use(cors());
+app.use(manejarErrores);
+app.use(mostrarDatosRequest);
 
 const port = process.env.PORT;
 
-//importacion de endpoints
-import { getDiscografia } from "./controllers/discografiaController.js";
 
 //definicion de endpoints
 
@@ -20,10 +29,18 @@ app.get("/", (req, res) => {
     res.send("Hello World");
 });
 
+
+import { getShows } from "./controllers/showsController.js";
+
+app.get('/shows', getShows);
+
+import { getDiscografia } from "./controllers/discografiaController.js";
+
 app.get('/discografia', getDiscografia);
 
 
 
+//inicio del servidio
 app.listen(port, () =>{
     console.log(`App corriendo en puerto ${port}`)
 });
