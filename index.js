@@ -6,7 +6,6 @@ import Users from "./models/User.js";
 import bodyParser from "body-parser";
 import cors from "cors";
 
-
 import { mostrarDatosRequest } from './utils/datosRequest.js';
 import { manejarErrores } from './utils/manejadorErrores.js';
 
@@ -17,6 +16,7 @@ connectDB();
 app.use(bodyParser.json())
 app.use(express.urlencoded({extended: true}));
 app.use(cors());
+
 app.use(manejarErrores);
 app.use(mostrarDatosRequest);
 
@@ -29,18 +29,20 @@ app.get("/", (req, res) => {
     res.send("Hello World");
 });
 
+import { getShows } from './controllers/showsController.js';
 
-import { getShows } from "./controllers/showsController.js";
+app.get("/shows", getShows);
 
-app.get('/shows', getShows);
+import { getNoticias } from "./controllers/noticiasController.js";
+
+app.get("/noticias", getNoticias);
+
 
 import { getDiscografia } from "./controllers/discografiaController.js";
 
-app.get('/discografia', getDiscografia);
+app.get("/discografia", getDiscografia);
 
 
-
-//inicio del servidio
 app.listen(port, () =>{
     console.log(`App corriendo en puerto ${port}`)
 });

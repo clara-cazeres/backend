@@ -5,9 +5,10 @@ let Schema = mongoose.Schema;
 
 let discoSchema = new Schema({
     nombre: {type: String},
-    fecha: {type: String},
+    fecha: {type: Date},
     tipo: {type: String},
-    portada :{type: String},
+    canciones: [{type: String}],
+    portada: {type: String},
 })
 
 discoSchema.plugin(mongooseUniqueValidator);
