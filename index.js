@@ -30,16 +30,13 @@ app.get("/", (req, res) => {
 });
 
 import { getShows } from './controllers/showsController.js';
-
 app.get("/shows", getShows);
 
 import { getNoticias } from "./controllers/noticiasController.js";
-
 app.get("/noticias", getNoticias);
 
 
 import { getDiscografia } from "./controllers/discografiaController.js";
-
 app.get("/discografia", getDiscografia);
 
 
