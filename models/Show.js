@@ -10,6 +10,7 @@ let showSchema = new Schema({
     pais: { type: String },
     lugar: { type: String },
     entradas: { type: String },
+    customID: { type: String },
 })
 
 showSchema.plugin(mongooseUniqueValidator);

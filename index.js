@@ -1,13 +1,13 @@
 //importacion de librerias
 import express from "express";
 import dotenv from "dotenv";
-import connectDB from "./utils/db.js";
+import connectDB from "./utiles.js/db.js";
 import Users from "./models/User.js";
 import bodyParser from "body-parser";
 import cors from "cors";
 
-import { mostrarDatosRequest } from './utils/datosRequest.js';
-import { manejarErrores } from './utils/manejadorErrores.js';
+import { mostrarDatosRequest } from './utiles.js/datosRequest.js';
+import { manejarErrores } from './utiles.js/manejadorErrores.js';
 
 const app = express();
 app.use(express.json());
