@@ -1,13 +1,13 @@
-import Discografia from "../models/Disco.js";
+import Discos from "../models/Disco.js";
 
-const getDiscografia = async (req, res) => {
+const getDiscos = async (req, res) => {
     try {
-        const discografia = await Discografia.find({});
-        console.log(discografia);
-        res.json(discografia);
+        const discos = await Discos.find({});
+        console.log(discos);
+        res.json(discos);
     } catch (err) {
         res.status(500).send("Internal server error");
     }
 };
 
-export { getDiscografia };
+export { getDiscos };

@@ -1,21 +1,22 @@
 //importacion de librerias
 import express from "express";
 import dotenv from "dotenv";
-import connectDB from "./utiles.js/db.js";
+import connectDB from "./utiles/db.js";
 import Users from "./models/User.js";
 import bodyParser from "body-parser";
 import cors from "cors";
 
-import { mostrarDatosRequest } from './utiles.js/datosRequest.js';
-import { manejarErrores } from './utiles.js/manejadorErrores.js';
+import { mostrarDatosRequest } from './utiles/datosRequest.js';
+import { manejarErrores } from './utiles/manejadorErrores.js';
 
 const app = express();
 app.use(express.json());
 dotenv.config();
 connectDB();
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cors());
+app.use('/uploads', express.static("uploads"));
 
 app.use(manejarErrores);
 app.use(mostrarDatosRequest);
@@ -36,8 +37,8 @@ import { getNoticias } from "./controllers/noticiasController.js";
 app.get("/noticias", getNoticias);
 
 
-import { getDiscografia } from "./controllers/discografiaController.js";
-app.get("/discografia", getDiscografia);
+import { getDiscos } from "./controllers/discografiaController.js";
+app.get("/discografia", getDiscos);
 
 
 app.listen(port, () =>{
@@ -45,21 +46,22 @@ app.listen(port, () =>{
 });
 
 
-app.get("/users/login", async(req, res) => {
 
-    Users.findOne({username: req.query.username})
-    .then((user)=>{
-        if (!user){
-            res.status(404).send("Usuario no encontrado");
-        } else{
-            if (user.password === req.query.password){
-            res.send(user);
-        } else{
-            res.status(401).send("Contraseña incorrecta");
+import { getLogin, postSignUp } from "./controllers/usersController.js";
+
+app.get("/users/login", getLogin);
+app.post("/users/signup", postSignUp);
+
+import upload from "./utiles/uploads.js";
+
+app.post("/uploads-profile-pic", (req, res, next) => {
+
+    upload.single("image")(req, res, (err) => {
+        console.log("Archivo subido:", req.file);
+
+        if(err) {
+            return res.status(500).send({error: err.message});
         }
-    }
+        res.send({ imageUrl: req.file.path});
     })
-    .catch((err) => {
-        res.status(500).send("Internal server error")
-    })
-});
+})

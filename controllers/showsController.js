@@ -2,23 +2,25 @@ import Shows from "../models/Show.js";
 
 const getShows = async (req, res) => {
     try {
-        let filtro = {};
-        const tipo = req.query.tipo;
-        const fechaActual = new Date();
+        const currentDate = new Date();
+        const filter = req.query.filter;
 
-        if (tipo === 'pasadas') {
-            filtro.fecha = { $lt: fechaActual };
-        } else if (tipo === 'proximas') {
-            filtro.fecha = { $gt: fechaActual };
+        let query = {};
+
+        if (filter === "pasadas") {
+            query = { fecha: { $lt: currentDate } };
+        } else if (filter === "proximas") {
+            query = { fecha: { $gte: currentDate } };
         }
-        console.log(filtro);
-        const shows = await Shows.find(filtro);
-        console.log(shows);
+
+        const shows = await Shows.find(query);
         res.json(shows);
-    } catch (err) {
-        res.status(500).send("Internal server error");
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Hubo un error al obtener los shows." });
     }
 };
 
 export { getShows };
+
 

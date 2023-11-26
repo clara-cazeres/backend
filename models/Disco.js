@@ -13,6 +13,6 @@ let discoSchema = new Schema({
 
 discoSchema.plugin(mongooseUniqueValidator);
 
-let Discografia = mongoose.model("Disco", discoSchema);
+let Discos = mongoose.model("Disco", discoSchema);
 
-export default Discografia;
+export default Discos;

@@ -4,7 +4,6 @@ import mongooseUniqueValidator from "mongoose-unique-validator";
 let Schema = mongoose.Schema;
 
 let showSchema = new Schema({
-    customId: { type: Number },
     fecha: { type: Date },
     ciudad: { type: String },
     pais: { type: String },
