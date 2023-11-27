@@ -64,4 +64,20 @@ app.post("/uploads-profile-pic", (req, res, next) => {
         }
         res.send({ imageUrl: req.file.path});
     })
-})
+});
+
+app.get("/noticias-img", async (req, res) => {
+    try {
+        const { resources } = await cloudinary.api.resources({
+            type: 'upload',
+            prefix: 'fotos-noticias', // Reemplaza 'tu-carpeta' con el nombre de tu carpeta en Cloudinary
+            max_results: 50
+        });
+
+        const imageUrls = resources.map(resource => resource.url);
+        res.send(imageUrls);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al obtener las imágenes');
+    }
+});
