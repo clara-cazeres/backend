@@ -1,26 +1,24 @@
-import Users from "../models/User.js";
+import Usuarios from "../models/Usuario.js";
 
 //Login
 
-const getLogin = async(req, res) => {
-
-    Users.findOne({username: req.query.username})
-    .then((user)=>{
-        if (!user){
+const postLogin = async(req, res) => {
+    Usuarios.findOne({username: req.body.username})
+    .then((usuario)=>{
+        if (!usuario){
             res.status(404).send("Usuario no encontrado");
         } else{
-            if (user.password === req.query.password){
-            res.send(user);
-        } else{
-            res.status(401).send("Contraseña incorrecta");
+            if (usuario.password === req.body.password){
+                res.send(usuario);
+            } else{
+                res.status(401).send("Contraseña incorrecta");
+            }
         }
-    }
     })
     .catch((err) => {
-        res.status(500).send("Internal server error")
+        res.status(500).send("Error interno del servidor")
     })
 };
-
 
 
 //Sign Up
@@ -30,12 +28,12 @@ const postSignUp = async (req, res) => {
 
 
     try {
-        const existingUser = await Users.findOne({ username });
+        const existingUser = await Usuarios.findOne({ username });
         if (existingUser) {
             return res.status(400).send("El usuario ya existe");
         }
 
-        const newUser = new Users({
+        const newUser = new Usuarios({
             username,
             password,
             email
@@ -51,5 +49,5 @@ const postSignUp = async (req, res) => {
 
 
 
-export { getLogin };
+export { postLogin };
 export { postSignUp };

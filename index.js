@@ -2,7 +2,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./utiles/db.js";
-import Users from "./models/User.js";
+//import Usuarios from "./models/Usuario.js";
 import bodyParser from "body-parser";
 import cors from "cors";
 
@@ -14,7 +14,7 @@ app.use(express.json());
 dotenv.config();
 connectDB();
 app.use(bodyParser.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use('/uploads', express.static("uploads"));
 
@@ -40,17 +40,36 @@ app.get("/noticias", getNoticias);
 import { getDiscos } from "./controllers/discografiaController.js";
 app.get("/discografia", getDiscos);
 
+app.get('/discografia/:discoId', (req, res) => {
+    const discoId = req.params.discoId;
+    console.log(discoId);
 
-app.listen(port, () =>{
+    Discos.findById(discoId)
+        .then(disco => {
+            if (!disco) {
+                res.status(404).json({ error: 'Disco no encontrado' });
+            } else {
+                res.json(disco);
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ error: err.message });
+        });
+});
+
+
+
+
+app.listen(port, () => {
     console.log(`App corriendo en puerto ${port}`)
 });
 
 
 
-import { getLogin, postSignUp } from "./controllers/usersController.js";
+import { postLogin, postSignUp } from "./controllers/usuarioController.js";
 
-app.get("/users/login", getLogin);
-app.post("/users/signup", postSignUp);
+app.post("/usuario/login", postLogin);
+app.post("/usuario/signup", postSignUp);
 
 import upload from "./utiles/uploads.js";
 
@@ -59,10 +78,10 @@ app.post("/uploads-profile-pic", (req, res, next) => {
     upload.single("image")(req, res, (err) => {
         console.log("Archivo subido:", req.file);
 
-        if(err) {
-            return res.status(500).send({error: err.message});
+        if (err) {
+            return res.status(500).send({ error: err.message });
         }
-        res.send({ imageUrl: req.file.path});
+        res.send({ imageUrl: req.file.path });
     })
 });
 
@@ -80,4 +99,23 @@ app.get("/noticias-img", async (req, res) => {
         console.error(error);
         res.status(500).send('Error al obtener las imágenes');
     }
+});
+
+
+//comentarios kuartito
+
+import Comentarios from "./models/Comentario.js";
+
+app.post('/comentarios', (req, res) => {
+    const comentarioTexto = req.body.comentario;
+    const customShowId = req.body.showId; // Este es el customID del show
+
+    const nuevoComentario = new Comentarios({
+        texto: comentarioTexto,
+        showId: customShowId // Guarda el customID del show
+    });
+
+    nuevoComentario.save()
+        .then(() => res.status(200).json({ message: "Comentario guardado exitosamente" }))
+        .catch(err => res.status(500).json({ error: err.message }));
 });

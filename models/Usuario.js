@@ -3,14 +3,14 @@ import mongooseUniqueValidator from "mongoose-unique-validator";
 
 let Schema = mongoose.Schema;
 
-let userSchema = new Schema({
+let usuarioSchema = new Schema({
     username: {type: String, required: true},
     password: {type: String, required: true},
     email: {type: String, required: true},
 })
 
-userSchema.plugin(mongooseUniqueValidator);
+usuarioSchema.plugin(mongooseUniqueValidator);
 
-let Users = mongoose.model("User", userSchema);
+let Usuarios = mongoose.model("Usuario", usuarioSchema);
 
-export default Users;
+export default Usuarios;
