@@ -30,33 +30,19 @@ app.get("/", (req, res) => {
     res.send("Hello World");
 });
 
-import { getShows } from './controllers/showsController.js';
+import { getShows, getShowById } from './controllers/showsController.js';
 app.get("/shows", getShows);
+app.get("/shows/:customID", getShowById);
 
-import { getNoticias } from "./controllers/noticiasController.js";
+
+import { getNoticias, getNoticia } from "./controllers/noticiasController.js";
 app.get("/noticias", getNoticias);
+app.get("/noticias/:id", getNoticia);
 
 
-import { getDiscos } from "./controllers/discografiaController.js";
+import { getDiscos, getDisco } from "./controllers/discografiaController.js";
 app.get("/discografia", getDiscos);
-
-app.get('/discografia/:discoId', (req, res) => {
-    const discoId = req.params.discoId;
-    console.log(discoId);
-
-    Discos.findById(discoId)
-        .then(disco => {
-            if (!disco) {
-                res.status(404).json({ error: 'Disco no encontrado' });
-            } else {
-                res.json(disco);
-            }
-        })
-        .catch(err => {
-            res.status(500).json({ error: err.message });
-        });
-});
-
+app.get("/discografia/:id", getDisco);
 
 
 
@@ -73,7 +59,7 @@ app.post("/usuario/signup", postSignUp);
 
 import upload from "./utiles/uploads.js";
 
-app.post("/uploads-profile-pic", (req, res, next) => {
+app.post("/uploads-show-pic", (req, res, next) => {
 
     upload.single("image")(req, res, (err) => {
         console.log("Archivo subido:", req.file);
@@ -89,7 +75,7 @@ app.get("/noticias-img", async (req, res) => {
     try {
         const { resources } = await cloudinary.api.resources({
             type: 'upload',
-            prefix: 'fotos-noticias', // Reemplaza 'tu-carpeta' con el nombre de tu carpeta en Cloudinary
+            prefix: 'fotos-noticias', 
             max_results: 50
         });
 
@@ -100,6 +86,9 @@ app.get("/noticias-img", async (req, res) => {
         res.status(500).send('Error al obtener las imágenes');
     }
 });
+
+
+//subir fotos kuartito
 
 
 //comentarios kuartito

@@ -21,6 +21,20 @@ const getShows = async (req, res) => {
     }
 };
 
-export { getShows };
+const getShowById = async (req, res) => {
+    try {
+        const show = await Shows.findOne({ customID: req.params.customID });
+        if (!show) {
+            return res.status(404).send('Show no encontrado');
+        }
+        res.json(show);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error al obtener el show." });
+    }
+};
+
+export { getShows, getShowById };
+
 
 
