@@ -57,19 +57,38 @@ import { postLogin, postSignUp } from "./controllers/usuarioController.js";
 app.post("/usuario/login", postLogin);
 app.post("/usuario/signup", postSignUp);
 
+
+import Shows from "./models/Show.js";
+//subir fotos kuartito
+
 import upload from "./utiles/uploads.js";
-
 app.post("/uploads-show-pic", (req, res, next) => {
-
-    upload.single("image")(req, res, (err) => {
-        console.log("Archivo subido:", req.file);
-
+    upload.single("image")(req, res, async (err) => {
         if (err) {
             return res.status(500).send({ error: err.message });
         }
-        res.send({ imageUrl: req.file.path });
-    })
+
+        const imageUrl = req.file.path;
+        const showId = req.body.showId; 
+        console.log("show id en uploads show pic:", showId)
+
+        try {
+            const show = await Shows.findOne({ customID: showId });
+            if (show) {
+                show.images.push(imageUrl);
+                await show.save();
+                res.send({ imageUrl });
+            } else {
+                res.status(404).send({ error: "Show no encontrado" });
+            }    
+        } catch (error) {
+            console.error("Error al buscar o guardar el show:", error);
+            res.status(500).send({ error: error.message });
+        }
+        
+    });
 });
+
 
 app.get("/noticias-img", async (req, res) => {
     try {
@@ -88,7 +107,6 @@ app.get("/noticias-img", async (req, res) => {
 });
 
 
-//subir fotos kuartito
 
 
 //comentarios kuartito
@@ -107,4 +125,16 @@ app.post('/comentarios', (req, res) => {
     nuevoComentario.save()
         .then(() => res.status(200).json({ message: "Comentario guardado exitosamente" }))
         .catch(err => res.status(500).json({ error: err.message }));
+});
+
+app.get('/comentarios/:showId', async (req, res) => {
+    try {
+        const showId = req.params.showId;
+        const comentarios = await Comentarios.find({ showId: showId })
+            .sort({ createdAt: -1 })
+            .limit(5); 
+        res.json(comentarios);
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
 });

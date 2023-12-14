@@ -18,7 +18,7 @@ const storage = new CloudinaryStorage({
     params: {
         folder: process.env.CLOUDINARY_FOLDER,
         public_id: (req, file) => {
-            return file.fieldname + '-perfil-' + Date.now();
+            return file.fieldname + '-show-' + Date.now();
         }
     }
 });
